@@ -15,6 +15,7 @@ namespace TestDot1_DOT.Controllers
             _logger = logger;
             _service = service;
         }
+
         [HttpPost("CreateBuku")]
         public IActionResult CreateBuku(string NamaBuku, string KodeBuku, string Penerbit, string TahunPenerbit)
         {
@@ -22,38 +23,65 @@ namespace TestDot1_DOT.Controllers
             buku = _service.Create(NamaBuku, KodeBuku, Penerbit, TahunPenerbit);
             return Ok(buku);
         }
+
         [HttpGet("GetAllBuku")]
         public IActionResult GetAllBuku()
         {
-            List<BukuViewModel> getBuku = new List<BukuViewModel>();
-            getBuku = _service.GetAllBuku();
-            return Ok(getBuku);
+            try
+            {
+                List<BukuViewModel> getBuku = new List<BukuViewModel>();
+                getBuku = _service.GetAllBuku();
+
+                return Ok(getBuku);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
         }
+
         [HttpPut("UpdateBuku")]
         public IActionResult UpdateByKodeBuku(string NamaBuku, string KodeBuku, string Penerbit, string TahunPenerbit)
         {
-            BukuViewModel buku = new BukuViewModel();
-            buku = _service.UpdateByKodeBuku(NamaBuku, KodeBuku, Penerbit, TahunPenerbit);
-            if(buku.NamaBuku == null)
+            try
             {
-                return BadRequest(404);
+                BukuViewModel buku = new BukuViewModel();
+                buku = _service.UpdateByKodeBuku(NamaBuku, KodeBuku, Penerbit, TahunPenerbit);
+                if (buku.NamaBuku == null)
+                {
+                    return NotFound("Buku tidak ditemukan");
+                }
+                return Ok(buku);
             }
-            return Ok(buku);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+
         }
+
         [HttpDelete("DeleteBuku")]
         public IActionResult DeleteByKodeBuku(string KodeBuku)
         {
-            BukuViewModel buku = new BukuViewModel();
-            bool delete = _service.Delete(KodeBuku);
-            if (delete)
+            try
             {
-                return Ok(delete);
+                BukuViewModel buku = new BukuViewModel();
+                bool delete = _service.Delete(KodeBuku);
+                if (delete)
+                {
+                    return Ok(delete);
+                }
+                else
+                {
+                    return BadRequest(400);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(400);
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
             }
-            
+
+
         }
     }
 }

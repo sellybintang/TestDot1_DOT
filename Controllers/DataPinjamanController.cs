@@ -15,12 +15,63 @@ namespace TestDot1_DOT.Controllers
             _logger = logger;
             _service = service;
         }
+
         [HttpPost("CreateDataPinjaman")]
         public IActionResult CreateDataPinjaman(string KodeSiswa, string KodeBuku, DateTime WaktuPinjaman, DateTime WaktuPengembalian)
         {
-            DataPinjamanViewModel dataPinjaman = new DataPinjamanViewModel();
-            dataPinjaman = _service.Create(KodeSiswa, KodeBuku, WaktuPinjaman, WaktuPengembalian);
-            return Ok(dataPinjaman);
+            try
+            {
+                DataPinjamanViewModel dataPinjaman = new DataPinjamanViewModel();
+                dataPinjaman = _service.Create(KodeSiswa, KodeBuku, WaktuPinjaman, WaktuPengembalian);
+                if (dataPinjaman == null)
+                {
+                    return Conflict("Buku sudah pernah dipesan");
+                }
+                return Ok(dataPinjaman);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+
         }
+        [HttpGet("GetBukuByKodeSiswa")]
+        public IActionResult GetAllBukuByKodeSiswa(string kodeSiswa)
+        {
+            try
+            {
+                List<DataPinjamanViewModel> getBuku = new List<DataPinjamanViewModel>();
+                getBuku = _service.GetBukuByKodeSiswa(kodeSiswa);
+                if (getBuku == null || getBuku.Count==0)
+                {
+                    return NotFound("Data tidak ada");
+                };
+                return Ok(getBuku);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+        }
+
+        [HttpDelete("DeleteBuku")]
+        public IActionResult Delete(string KodeSiswa, string KodeBuku)
+        {
+            try
+            {
+                DataPinjamanViewModel buku = new DataPinjamanViewModel();
+                bool delete = _service.delete(KodeSiswa, KodeBuku);
+                if (delete)
+                {
+                    return Ok(delete);
+                }
+                return NotFound("Data Tidak Ditemukan");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+        }
+
     }
 }

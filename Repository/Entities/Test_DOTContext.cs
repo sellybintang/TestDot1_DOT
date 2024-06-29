@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
+using DotNetEnv;
 namespace TestDot1_DOT.Repositories.Entities
 {
     public partial class Test_DOTContext : DbContext
@@ -22,10 +22,14 @@ namespace TestDot1_DOT.Repositories.Entities
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            Env.Load();
+            var database = Environment.GetEnvironmentVariable("DATABASE_URL");
+            optionsBuilder.UseLazyLoadingProxies();
+
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=SELLY-ONE-CODE\\SQLEXPRESS;Database=Test_DOT;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer(database);
             }
         }
 

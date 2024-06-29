@@ -21,14 +21,6 @@ var database = Environment.GetEnvironmentVariable("DATABASE_URL");
 var localhostProfiles = Environment.GetEnvironmentVariable("localhostProfiles");
 var localhostIIS = Environment.GetEnvironmentVariable("localhostIIS");
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.WebHost.UseUrls(localhostProfiles);
-}
-else
-{
-    builder.WebHost.UseUrls(localhostIIS);
-}
 builder.Services.AddDbContext<Test_DOTContext>(options =>
     options.UseSqlServer(database));
 //builder.Services.AddDbContext<Test_DOTContext>(options =>

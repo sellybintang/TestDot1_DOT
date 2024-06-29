@@ -21,30 +21,42 @@ namespace TestDot1_DOT.Controllers
         [HttpPost("CreateUser")]
         public IActionResult Createuser(string NamaLengkap, DateTime TanggalLahir, string NoTelp, string AlamatRumah, string KodeSiswa)
         {
-            UserViewModel user = new UserViewModel();
-            user = _service.Create(NamaLengkap, TanggalLahir, NoTelp, AlamatRumah, KodeSiswa);
-            return Ok(user);
+            try
+            {
+                UserViewModel user = new UserViewModel();
+                user = _service.Create(NamaLengkap, TanggalLahir, NoTelp, AlamatRumah, KodeSiswa);
+                if(user == null)
+                {
+                    return Conflict("Kode sudah terpakai");
+                }
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+
         }
-        //[HttpDelete("DeleteUser")]
-        //public IActionResult DeleteUser()
-        //{
-            
-        //}
-        //[HttpGet("GetAllUser")]
-        //public IActionResult GetAllUser()
-        //{
-           
-        //}
-        //[HttpPut("UpdateUser")]
-        //public IActionResult UpdateUser()
-        //{
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = Random.Shared.Next(-20, 55),
-        //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
+
+        [HttpGet("GetAllUser")]
+        public IActionResult GetAllUser(string kodeSiswa)
+        {
+            try
+            {
+                List<UserViewModel> users = new List<UserViewModel>();
+                users = _service.GetUsers(kodeSiswa);
+                if (users== null)
+                {
+                    return NotFound("Data user tidak ditemukan");
+                }
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
+
+        }
+
     }
 }

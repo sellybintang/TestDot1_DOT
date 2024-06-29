@@ -17,18 +17,25 @@ namespace TestDot1_DOT.Repositories.Repositories
             _contex.Set<TblsUser>().Add(entity);
             _contex.SaveChanges();
         }
-        //public TblsUser GetUser(TblsUser user)
-        //{
 
-        //}
-        //public TblsUser Update(TblsUser user)
-        //{
+        public bool GetUser(string kodeSiswa)
+        {
+            var result = true;
+            var query = _contex.TblsUsers.Where(x=>x.KodeSiswa == kodeSiswa && x.DeletedDate == null).FirstOrDefault();
+            if (query == null)
+            {
+                result = false;
+                return result;
+            }
+            return result;
+        }
+        public List<TblsUser> GetAllUser()
+        {
+            var query = _contex.TblsUsers.Where(x => x.DeletedDate == null).ToList();
+            
+            return query;
+        }
 
-        //}
-        //public TblsUser Delete(TblsUser user)
-        //{
-
-        //}
 
 
     }
