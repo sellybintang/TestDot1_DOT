@@ -36,7 +36,7 @@ Open a terminal or command prompt and run the following command to clone the rep
 Selly Bintang Melananda
 
 ```bash
-git clone https://github.com/yourusername/book-loan-management-system.git
+git clone https://github.com/sellybintang/TestDot1_DOT.git
 
 
 
