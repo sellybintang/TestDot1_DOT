@@ -19,9 +19,20 @@ namespace TestDot1_DOT.Controllers
         [HttpPost("CreateBuku")]
         public IActionResult CreateBuku(string NamaBuku, string KodeBuku, string Penerbit, string TahunPenerbit)
         {
-            BukuViewModel buku = new BukuViewModel();
-            buku = _service.Create(NamaBuku, KodeBuku, Penerbit, TahunPenerbit);
-            return Ok(buku);
+            try
+            {
+                BukuViewModel buku = new BukuViewModel();
+                buku = _service.Create(NamaBuku, KodeBuku, Penerbit, TahunPenerbit);
+                if (buku == null)
+                {
+                    return Conflict("Kode buku sudah digunakan");
+                }
+                return Ok(buku);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error : {ex.Message}");
+            }
         }
 
         [HttpGet("GetAllBuku")]
@@ -73,7 +84,7 @@ namespace TestDot1_DOT.Controllers
                 }
                 else
                 {
-                    return BadRequest(400);
+                    return NotFound("Kode buku tidak ditemukan");
                 }
             }
             catch (Exception ex)

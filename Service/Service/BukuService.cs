@@ -18,15 +18,21 @@ namespace TestDot1_DOT.Service.Service
 
         public BukuViewModel Create(string NamaBuku, string KodeBuku, string Penerbit, string TahunPenerbit)
         {
-            BukuViewModel model = new BukuViewModel();
-            model.Id = Guid.NewGuid();
-            model.CreatedDate = DateTime.Now;
-            model.NamaBuku = NamaBuku;
-            model.KodeBuku = KodeBuku;
-            model.Penerbit = Penerbit;
-            model.TahunPenerbit = TahunPenerbit;
-            _repository.Create(_mapper.Map<TblsBuku>(model));
-            return model;
+            bool checkKodeBuku = _repository.getBukuByKodeBuku(KodeBuku);
+            if(!checkKodeBuku)
+            {
+                BukuViewModel model = new BukuViewModel();
+                model.Id = Guid.NewGuid();
+                model.CreatedDate = DateTime.Now;
+                model.NamaBuku = NamaBuku;
+                model.KodeBuku = KodeBuku;
+                model.Penerbit = Penerbit;
+                model.TahunPenerbit = TahunPenerbit;
+                _repository.Create(_mapper.Map<TblsBuku>(model));
+                return model;
+            }
+            
+            return null;
         }
 
         public List<BukuViewModel> GetAllBuku()

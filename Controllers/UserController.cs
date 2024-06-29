@@ -47,7 +47,7 @@ namespace TestDot1_DOT.Controllers
                 users = _service.GetUsers(kodeSiswa);
                 if (users== null)
                 {
-                    return NotFound("Data user tidak ditemukan");
+                    return Conflict("Kode anda salah, silahkan masukkan kode dengan benar");
                 }
                 return Ok(users);
             }
